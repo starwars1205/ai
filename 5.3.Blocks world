@@ -1,0 +1,32 @@
+#Blocks world
+
+from collections import deque
+
+start = ("A", "B", "C")
+goal = ("C", "B", "A")
+
+queue = deque([(start, [start])])
+visited = {start}
+
+while queue:
+    state, path = queue.popleft()
+
+    if state == goal:
+        print("Solution found:")
+        for step in path:
+            print(step)
+        print("Total moves:", len(path) - 1)
+        break
+
+    for i in range(3):
+        new_state = list(state)
+        new_state[i], new_state[(i + 1) % 3] = (
+            new_state[(i + 1) % 3], new_state[i]
+        )
+        new_state = tuple(new_state)
+
+        if new_state not in visited:
+            visited.add(new_state)
+            queue.append((new_state, path + [new_state]))
+else:
+    print("No solution found")
