@@ -1,0 +1,53 @@
+#Missionaries and Cannibals,
+
+def dfs():
+    start = (3, 3, 1)
+    goal = (0, 0, 0)
+
+    stack = [(start, [])]
+    visited = set()
+
+    while stack:
+        state, path = stack.pop()
+
+        if state in visited:
+            continue
+
+        visited.add(state)
+        path = path + [state]
+
+        if state == goal:
+            print("Solution found:")
+            for step in path:
+                print(step)
+            return
+
+        m, c, boat = state
+
+        moves = [(1, 0), (2, 0), (0, 1),
+                 (0, 2), (1, 1)]
+
+        for x, y in moves:
+            if boat == 1:
+                new_state = (m - x, c - y, 0)
+            else:
+                new_state = (m + x, c + y, 1)
+
+            nm, nc, nb = new_state
+
+            if not (0 <= nm <= 3 and 0 <= nc <= 3):
+                continue
+
+            left_safe = (nm == 0 or nm >= nc)
+            right_m = 3 - nm
+            right_c = 3 - nc
+            right_safe = (right_m == 0 or right_m >= right_c)
+
+            if (left_safe and right_safe
+                    and new_state not in visited):
+                stack.append((new_state, path))
+
+    print("No solution found")
+
+
+dfs()
