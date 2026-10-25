@@ -1,0 +1,51 @@
+#Use DFS for problem solving. Examples can be: water jug problem,
+
+def dfs(capacity1, capacity2, target):
+    stack = [((0, 0), [])]
+    visited = set()
+
+    while stack:
+        (a, b), path = stack.pop()
+
+        if (a, b) in visited:
+            continue
+
+        visited.add((a, b))
+        path = path + [(a, b)]
+
+        if a == target:
+            print("Solution found:")
+            for state in path:
+                print(state)
+            return
+
+        # Fill Jug 1
+        next_states = [
+            (capacity1, b),
+
+            # Fill Jug 2
+            (a, capacity2),
+
+            # Empty Jug 1
+            (0, b),
+
+            # Empty Jug 2
+            (a, 0),
+
+            # Pour Jug 1 into Jug 2
+            (max(0, a - (capacity2 - b)),
+             min(capacity2, a + b)),
+
+            # Pour Jug 2 into Jug 1
+            (min(capacity1, a + b),
+             max(0, b - (capacity1 - a)))
+        ]
+
+        for state in next_states:
+            if state not in visited:
+                stack.append((state, path))
+
+    print("No solution found")
+
+
+dfs(4, 3, 2)
