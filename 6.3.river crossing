@@ -1,0 +1,56 @@
+#river crossing,
+
+def dfs():
+    start = (0, 0, 0, 0)
+    goal = (1, 1, 1, 1)
+
+    stack = [(start, [start])]
+    visited = set()
+
+    while stack:
+        state, path = stack.pop()
+
+        if state in visited:
+            continue
+        visited.add(state)
+
+        if state == goal:
+            print("Solution found:")
+            for step in path:
+                print(step)
+            return
+
+        f, w, g, c = state
+
+        # Check whether the state is safe
+        if (w == g and f != w) or (g == c and f != g):
+            continue
+
+        # Farmer crosses alone or with one item
+        moves = [
+            (1, 0, 0, 0),  # Farmer alone
+            (1, 1, 0, 0),  # Farmer with wolf
+            (1, 0, 1, 0),  # Farmer with goat
+            (1, 0, 0, 1)   # Farmer with cabbage
+        ]
+
+        for move in moves:
+            new_state = tuple(
+                state[i] ^ move[i] for i in range(4)
+            )
+
+            # The farmer and item must start on the same side
+            item_index = next(
+                (i for i in range(1, 4) if move[i] == 1), None
+            )
+
+            if item_index is not None and state[item_index] != f:
+                continue
+
+            if new_state not in visited:
+                stack.append((new_state, path + [new_state]))
+
+    print("No solution found")
+
+
+dfs()
