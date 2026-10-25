@@ -1,0 +1,49 @@
+#Implement Tower of Hanoi by State Space Search.
+
+from collections import deque
+
+def bfs_hanoi(n):
+    start = (tuple(range(n, 0, -1)), (), ())
+    goal = ((), (), tuple(range(n, 0, -1)))
+
+    queue = deque([(start, [])])
+    visited = {start}
+
+    while queue:
+        state, path = queue.popleft()
+
+        if state == goal:
+            return path
+
+        for s in range(3):
+            if not state[s]:
+                continue
+
+            disk = state[s][-1]
+
+            for d in range(3):
+                if s == d:
+                    continue
+
+                if not state[d] or state[d][-1] > disk:
+                    pegs = [list(x) for x in state]
+                    pegs[s].pop()
+                    pegs[d].append(disk)
+
+                    new_state = tuple(tuple(x) for x in pegs)
+
+                    if new_state not in visited:
+                        visited.add(new_state)
+                        new_path = path + [
+                            f"Move disk {disk} from {chr(65+s)} to {chr(65+d)}"
+                        ]
+                        queue.append((new_state, new_path))
+
+    return []
+
+result = bfs_hanoi(3)
+
+for move in result:
+    print(move)
+
+print("Total moves:", len(result))
